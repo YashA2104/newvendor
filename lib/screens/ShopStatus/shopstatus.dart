@@ -36,7 +36,7 @@ class ShopStatus extends StatelessWidget {
           ),
         ),
       ),
-      body: Body(),
+      body: Body(shopStatus: shopStatus,),
     );
   }
 }

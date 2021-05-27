@@ -15,6 +15,12 @@ import 'package:vendor/screens/OTP/otp_screen.dart';
 import 'package:vendor/size_config.dart';
 
 class CompleteProfileForm extends StatefulWidget {
+  String email,pass;
+
+  CompleteProfileForm({
+   @required this.email,
+   @required this.pass,
+});
   @override
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
 }
@@ -26,9 +32,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   TextEditingController addressController = new TextEditingController();
   TextEditingController shopNameController = new TextEditingController();
 
-  String newValue, f_name, l_name, p_number, address, shopName;
+  String shopType, f_name, l_name, p_number, address, shopName ;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
   String documentURL;
   final picker = ImagePicker();
   File image;
@@ -54,7 +59,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 .collection('user')
                 .doc('details')
                 .update({
-              newValue: documentURL,
+              shopType: documentURL,
             }).whenComplete(() => {
                       Fluttertoast.showToast(msg: 'ImageDetails Saved!'),
                     }),
@@ -68,7 +73,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   }
 
   void setValue(String value) {
-    newValue = value;
+    shopType = value;
   }
 
   void getValues() {
@@ -95,37 +100,23 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         'lastName': l_name,
         'phoneNumber': p_number,
         'address': address,
-      }).whenComplete(() async => {
-                Navigator.pushNamed(context, Docs.routeName),
-                Fluttertoast.showToast(msg: 'Data Received Successfully!'),
-                firebaseFirestore
-                    .collection('vendor')
-                    .doc(await FirebaseAuth.instance.currentUser.uid.toString())
-                    .collection('shop')
-                    .doc('details')
-                    .set({
-                  'shopType': newValue,
-                  'shopName': shopName,
-                  'shopAddress': address,
-                }),
-                firebaseFirestore
-                    .collection('shop')
-                    .doc(FirebaseAuth.instance.currentUser.uid)
-                    .set({
-                  'shopType': newValue,
-                  'shopName': shopName,
-                  'shopAddress': address,
-                  'shopStatus': 'Not verified',
-                  'shopCover': '',
-                  'docID': FirebaseAuth.instance.currentUser.uid,
-                }),
-                FirebaseFirestore.instance
-                    .collection('shopDocs')
-                    .doc(FirebaseAuth.instance.currentUser.uid)
-                    .set({
-                  'null': null,
-                }),
+        'shopType' : shopType,
+        'shopStatus': 'NOT VERIFIED',
+        'shopName' : shopName,
               });
+      firebaseFirestore.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).set({
+        'firstName': f_name,
+        'lastName': l_name,
+        'phoneNumber': p_number,
+        'address': address,
+        'shopType' : shopType,
+        'shopStatus': 'NOT VERIFIED',
+        'shopName' : shopName,
+        'shopImage': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
+        'userEmail': FirebaseAuth.instance.currentUser.email.toString(),
+        'userID': FirebaseAuth.instance.currentUser.uid,
+        'catImage' : 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
+      });
     } else {
       Fluttertoast.showToast(msg: 'Please Fill All the Details');
     }
@@ -217,7 +208,13 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                 onPressed: () async {
                   await getValues();
                   await updateValues();
-                  Navigator.pushNamed(context, Docs.routeName);
+                  if(fnameController.text.isNotEmpty && lnameController.text.isNotEmpty && phoneNumberController.text.isNotEmpty && addressController.text.isNotEmpty && shopNameController.text.isNotEmpty && shopType.isNotEmpty){
+                    await Fluttertoast.showToast(msg: 'Details Saved Successfully !! ');
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Docs(pass: widget.pass, email: widget.email,address: address,f_name: f_name,l_name: l_name,p_number: p_number,shopName: shopName,shopType: shopType,)));
+                  }
+                  else{
+                    Fluttertoast.showToast(msg: 'Kindly enter all the details carefully !!  ');
+                  }
                 },
                 color: kSecondaryColor,
                 child: Text('Continue',

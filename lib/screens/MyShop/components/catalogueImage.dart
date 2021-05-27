@@ -42,22 +42,19 @@ class _catImageState extends State<catImage> {
   }
   uploadImages1() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var storage =FirebaseStorage.instance.ref('CatImages').child(faker.person.name());
+    var storage =FirebaseStorage.instance.ref('ShopImages').child(faker.person.name());
     UploadTask uploadTask = storage.putFile(image);
     await uploadTask.whenComplete(() => null ).then((value) async{
       await value.ref.getDownloadURL().then((value) => {
         shopImageURL=value.toString(),
-        firebaseFirestore.collection('catalogueImages').doc(firebaseAuth.currentUser.uid.toString()).collection('images').doc().set(
+        firebaseFirestore.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid).collection('catImages').doc().set(
             {
-              'imageURL' : shopImageURL,
-              'docID' : firebaseAuth.currentUser.uid,
-            }).whenComplete(() => {
-          Fluttertoast.showToast(msg: 'ImageDetails Saved!'),
-        }),
-        firebaseFirestore.collection('shop').doc(firebaseAuth.currentUser.uid.toString()).update(
-            {
-              'catImageURL' : shopImageURL,
+              'catImage' : shopImageURL,
             }),
+      firebaseFirestore.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+          .collection('user').doc('details').update({
+      'catImage' : shopImageURL,
+      }),
 
       });
     });
@@ -82,7 +79,7 @@ class _catImageState extends State<catImage> {
           children: [
             Positioned(
               top: 0,right: 0,left: 0,bottom: 0,
-              child: widget.catImageURL == '' ? Container() : Image.network(widget.catImageURL),
+              child: Image.network(widget.catImageURL),
             ),
             Padding(
               padding: EdgeInsets.only(

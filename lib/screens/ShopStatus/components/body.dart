@@ -10,11 +10,9 @@ import 'package:vendor/size_config.dart';
 class Body extends StatefulWidget {
 
   String shopStatus;
-  getDoc()async{
-    DocumentSnapshot doc = await FirebaseFirestore.instance.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).get();
-    shopStatus = doc['shopStatus'];
-    print(shopStatus);
-  }
+  Body({
+    @required this.shopStatus,
+});
 
   @override
   _BodyState createState() => _BodyState();
@@ -23,12 +21,7 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
 
   String couponCode;
-  @override
-  void setState(fn) {
-    // TODO: implement setState
-    super.setState(fn);
-    widget.getDoc();
-  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(

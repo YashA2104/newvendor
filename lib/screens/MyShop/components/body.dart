@@ -13,14 +13,14 @@ import 'package:vendor/screens/MyShop/components/shopimage.dart';
 import 'package:vendor/size_config.dart';
 
 class Body extends StatefulWidget {
-  String shopName, shopType,shopAddress,uid,shopImageURL,catImageURL;
+  String shopName, shopType,shopAddress,uid,shopImage,catImage;
   Body({
     @required this.uid,
     @required this.shopType,
     @required this.shopName,
     @required this.shopAddress,
-    @required this.shopImageURL,
-    @required this.catImageURL,
+    @required this.shopImage,
+    @required this.catImage,
 });
   @override
   _BodyState createState() => _BodyState();
@@ -29,82 +29,22 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   String shopImageURL,catImageURL;
 
-  getDocs() async{
-    DocumentSnapshot doc1 = await FirebaseFirestore.instance.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).get();
-    shopImageURL = doc1['shopImageURL'];
-    catImageURL = doc1['catImageURL'];
-  }
   final picker = ImagePicker();
   File image ;
 
-  Future  chooseImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if(pickedFile!=null)
-      {
-        image = File(pickedFile.path);
-        uploadImages();
-      }
-    });
-  }
-  uploadImages() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var storage =FirebaseStorage.instance.ref('ShopImages').child(faker.person.name());
-    UploadTask uploadTask = storage.putFile(image);
-    await uploadTask.whenComplete(() => null ).then((value) async{
-      var firebaseAuth;
-      await value.ref.getDownloadURL().then((value) => {
-        shopImageURL=value.toString(),
-        firebaseFirestore.collection('shopImages').doc(firebaseAuth.currentUser.uid.toString()).collection('images').doc().set(
-            {
-              'imageURL' : shopImageURL,
-              'docID' : FirebaseAuth.instance.currentUser.uid,
-            }).whenComplete(() => {
-          Fluttertoast.showToast(msg: 'ImageDetails Saved!'),
-        }),
-        firebaseFirestore.collection('shop').doc(firebaseAuth.currentUser.uid.toString()).update(
-            {
-              'shopImageURL' : shopImageURL,
-            }),
-
-      });
-    });
-  }
-  RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-
-  void _onLoading() async {
-    setState(() {
-      getDocs();
-    });
-    _refreshController.loadComplete();
-  }
   String valueChoose;
 
   List listItems = ['1', '2', '3'];
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      getDocs();
-    });
-    return SmartRefresher(
-      controller: _refreshController,
-      onLoading: _onLoading,
-      enablePullDown: true,
-      onRefresh: () async {
-        await Future.delayed(Duration(milliseconds: 1000));
-        _refreshController.refreshCompleted();
-        print(shopImageURL + 'shopImageURL');
-      },
-      scrollDirection: Axis.vertical,
-      child: ListView(
+    return ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ShopImage(
-                shopImageURL: widget.shopImageURL,
+                shopImageURL: widget.shopImage,
                 text: '-Shop Images-',
               ),
               Padding(
@@ -181,13 +121,14 @@ class _BodyState extends State<Body> {
                     setState(() {
                       valueChoose = newValue;
                       FirebaseFirestore fs = FirebaseFirestore.instance;
-                      fs.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid.toString()).collection('shop').doc('details').update({
+                      fs.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).update(
+                          {
+                            'deliveryTiming' : newValue,
+                          });
+                      fs.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid.toString()).collection('user').doc('details').update({
                         'DeliveryTiming'  : newValue,
                       }).whenComplete(() => {
                         Fluttertoast.showToast(msg: 'Delivery Timings Saved !'),
-                      });
-                      fs.collection('shop').doc(FirebaseAuth.instance.currentUser.uid.toString()).update({
-                        'deliveryHours' : newValue,
                       });
                     });
                   },
@@ -214,13 +155,12 @@ class _BodyState extends State<Body> {
                 ),
               ),
               catImage(
-                catImageURL: widget.catImageURL,
+                catImageURL: widget.catImage,
                 text: '-Catalogue-',
               ),
             ],
           ),
         ],
-      ),
-    );
+      );
   }
 }

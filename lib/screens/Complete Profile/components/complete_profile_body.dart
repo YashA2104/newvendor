@@ -4,6 +4,11 @@ import 'package:vendor/screens/Complete%20Profile/components/complete_profile_fo
 import 'package:vendor/size_config.dart';
 
 class CompleteProfileBody extends StatelessWidget {
+  String email,pass;
+  CompleteProfileBody({
+    @required this.email,
+    @required this.pass,
+});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -35,7 +40,7 @@ class CompleteProfileBody extends StatelessWidget {
           SizedBox(
             height: 80,
           ),
-          CompleteProfileForm(),
+          CompleteProfileForm(email: email, pass: pass,),
           InkWell(
             onTap: () {},
             child: Text(

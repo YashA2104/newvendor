@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/components/custom_bottom_nav_bar.dart';
 import 'package:vendor/constants.dart';
@@ -8,10 +10,21 @@ import 'package:vendor/screens/enums.dart';
 import 'package:vendor/screens/home/components/body.dart';
 import 'package:vendor/size_config.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  String imageURL;
+  HomeScreen({
+    @required this.imageURL,
+});
   static String routeName = '/home';
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -48,13 +61,13 @@ class HomeScreen extends StatelessWidget {
               icon: Icon(
                 Icons.notifications,
                 color: kPrimaryColor,
-                
+
               ),
             ),
           ),
         ],
       ),
-      body: Body(),
+      body: Body(imageURL: widget.imageURL,),
       bottomNavigationBar: CustomBottomNavBar(
         selectedMenu: MenuState.home,
       ),

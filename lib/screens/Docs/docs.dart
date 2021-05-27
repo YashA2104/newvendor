@@ -4,9 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:vendor/constants.dart';
 import 'package:vendor/screens/Docs/components/docsbody.dart';
 import 'package:vendor/screens/OTP/otp_screen.dart';
+import 'package:vendor/screens/home/home.dart';
 import 'package:vendor/size_config.dart';
 
 class Docs extends StatelessWidget {
+  String shopType, f_name, l_name, p_number, address, shopName , email, pass;
+
+  Docs({
+    @required this.pass,
+    @required this.email,
+    @required this.address,
+    @required this.f_name,
+    @required this.l_name,
+    @required this.p_number,
+    @required this.shopName,
+    @required this.shopType,
+});
   static String routeName = '/Docs';
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class Docs extends StatelessWidget {
           ),
         ),
       ),
-      body: DocsBody(),
+      body: DocsBody(email: email, pass: pass,),
       bottomNavigationBar: Container(
         color: Colors.grey.shade200,
         height: 75,
@@ -46,15 +59,12 @@ class Docs extends StatelessWidget {
           ),
           child: RaisedButton(
             color: kSecondaryColor,
-            onPressed: () {
-              FirebaseFirestore.instance
-                  .collection('shop')
-                  .doc(FirebaseAuth.instance.currentUser.uid)
-                  .set({
-                'catImageURL': '',
-                'shopImageURL': '',
-              });
-              Navigator.pushNamed(context, OTPScreen.routeName);
+            onPressed: () async {
+              var doc = await FirebaseFirestore.instance.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+              .collection('user').doc('details').get();
+              var imageURL = doc['shopImage'];
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(imageURL: imageURL,)));
+              print(imageURL);
             },
             child: Text(
               'Upload Documents',

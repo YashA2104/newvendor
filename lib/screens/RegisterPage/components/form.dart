@@ -55,6 +55,12 @@ class _FormPageState extends State<FormPage> {
       'lastName': '',
       'phoneNumber': '',
       'address': '',
+      'shopImage': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
+      'shopType' : '',
+      'catImage': '',
+      'userEmail': FirebaseAuth.instance.currentUser.email.toString(),
+      'userID': FirebaseAuth.instance.currentUser.uid,
+      'catImage' : 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
     }).whenComplete(() => {
               Fluttertoast.showToast(msg: 'Details are saved Successfully!'),
             });
@@ -100,7 +106,13 @@ class _FormPageState extends State<FormPage> {
                 await getValues();
                 await registerUser();
                 await uploadDetails();
-                Navigator.pushNamed(context, CompleteProfile.routeName);
+                if(pass == rePass && emailController.text.isNotEmpty){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CompleteProfile(email: email, pass: pass)));
+                  Fluttertoast.showToast(msg: 'User Registered Successfully !!');
+                }
+                else{
+                  Fluttertoast.showToast(msg: 'Kindly fill all the details carefully!!');
+                }
               },
               color: kSecondaryColor,
               child: Text('Continue',

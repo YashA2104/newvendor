@@ -42,8 +42,8 @@ class MyShop extends StatelessWidget {
         ),
       ),
       body: Body(
-        catImageURL: catImageURL,
-        shopImageURL: shopImageURL.isNotEmpty ? '123' : shopImageURL,
+        catImage: catImageURL,
+        shopImage:shopImageURL,
         shopType: shopType,
         shopAddress: shopAddress,
         shopName: shopName,

@@ -5,6 +5,12 @@ import 'package:vendor/screens/RegisterPage/register_page.dart';
 import 'package:vendor/size_config.dart';
 
 class CompleteProfile extends StatelessWidget {
+
+  String email,pass;
+  CompleteProfile({
+    @required this.email,
+    @required this.pass,
+});
   static String routeName = "/complete_profile";
   @override
   Widget build(BuildContext context) {

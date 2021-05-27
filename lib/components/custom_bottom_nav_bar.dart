@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vendor/screens/MessagingChat/chat.dart';
@@ -46,8 +48,13 @@ class CustomBottomNavBar extends StatelessWidget {
                       ? kSecondaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () =>
-                    Navigator.pushNamed(context, HomeScreen.routeName),
+                onPressed: ()async{
+                  var doc = await FirebaseFirestore.instance.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+                      .collection('user').doc('details').get();
+                  var imageURL = doc['shopImage'];
+                  print(imageURL);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(imageURL: imageURL,)));
+                },
               ),
               IconButton(
                 icon: SvgPicture.asset(
@@ -67,8 +74,12 @@ class CustomBottomNavBar extends StatelessWidget {
                       ? kSecondaryColor
                       : inActiveIconColor,
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, ShopProfile.routeName);
+                onPressed: () async{
+                  var doc = await FirebaseFirestore.instance.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+                      .collection('user').doc('details').get();
+                  var shopimageURL = doc['shopImage'];
+                  var catimageURL = doc['catImage'];
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ShopProfile(shopType: doc['shopType'], shopName: doc['shopName'], catImageURL: catimageURL, shopImageURL: shopimageURL,shopAddress: doc['address'],uid: doc['userID'],)));
                 },
               ),
             ],

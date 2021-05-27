@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/constants.dart';
 import 'package:vendor/screens/home/home.dart';
@@ -43,8 +45,12 @@ class LoginSuccessBody extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, HomeScreen.routeName);
+                    onPressed: () async{
+                      var doc = await FirebaseFirestore.instance.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+                          .collection('user').doc('details').get();
+                      var imageURL = doc['shopImage'];
+                      print(imageURL);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(imageURL: imageURL,)));
                     },
                     color: kSecondaryColor,
                     child: Text('Continue',

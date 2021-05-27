@@ -28,42 +28,35 @@ class _ShopImageState extends State<ShopImage> {
   final picker = ImagePicker();
   File image;
 
-  Future chooseImage() async {
+  Future  chooseImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      if (pickedFile != null) {
+      if(pickedFile!=null)
+      {
         image = File(pickedFile.path);
         uploadImages();
       }
     });
   }
-
   uploadImages() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var storage =
-        FirebaseStorage.instance.ref('ShopImages').child(faker.person.name());
+    var storage =FirebaseStorage.instance.ref('ShopImages').child(faker.person.name());
     UploadTask uploadTask = storage.putFile(image);
-    await uploadTask.whenComplete(() => null).then((value) async {
+    await uploadTask.whenComplete(() => null ).then((value) async{
+      var firebaseAuth;
       await value.ref.getDownloadURL().then((value) => {
-            shopImageURL = value.toString(),
-            firebaseFirestore
-                .collection('shopImages')
-                .doc(firebaseAuth.currentUser.uid.toString())
-                .collection('images')
-                .doc()
-                .set({
-              'imageURL': shopImageURL,
-              'docID': FirebaseAuth.instance.currentUser.uid,
-            }).whenComplete(() => {
-                      Fluttertoast.showToast(msg: 'ImageDetails Saved!'),
-                    }),
-            firebaseFirestore
-                .collection('shop')
-                .doc(firebaseAuth.currentUser.uid.toString())
-                .update({
-              'shopImageURL': shopImageURL,
+        shopImageURL=value.toString(),
+        firebaseFirestore.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid).collection('shopImages').doc().set(
+            {
+              'shopImage' : shopImageURL,
             }),
-          });
+        firebaseFirestore.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('user').doc('details').update({
+          'shopImage' : shopImageURL,
+        }),
+
+
+      });
     });
   }
 

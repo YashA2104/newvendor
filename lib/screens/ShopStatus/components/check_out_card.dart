@@ -23,7 +23,7 @@ class CheckoutCard extends StatefulWidget {
 class _CheckoutCardState extends State<CheckoutCard> {
   TextEditingController couponCodeController = new TextEditingController();
 
-  double percentage, value = 3000;
+  double percentage, _value = 3000;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +58,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                   width: 100,
                   height: 50,
                   child: TextField(
+                    controller: couponCodeController,
                     decoration: InputDecoration(
                       hintText: 'Promo Code',
                       border: OutlineInputBorder(
@@ -83,7 +84,20 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     child: IconButton(
                       icon: Icon(Icons.save_outlined,
                           size: 30, color: kSecondaryColor),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          var doc = FirebaseFirestore.instance.collection('couponCodes').doc().get().then((value) => {
+                            value.data().forEach((key, value) {
+                              if( key=='couponCode' && value== couponCodeController.text.toString()){
+                                if(key == 'couponPercentage'){
+                                  percentage = value;
+                                  _value = _value - (percentage/100 * _value);
+                                }
+                              }
+                            })
+                          });
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -98,7 +112,7 @@ class _CheckoutCardState extends State<CheckoutCard> {
                     text: "Total:\n",
                     children: [
                       TextSpan(
-                        text: value.toString(),
+                        text: _value.toString(),
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ],
@@ -149,8 +163,8 @@ class _CheckoutCardState extends State<CheckoutCard> {
                                     percentage = double.parse(
                                         element['couponPercentage']);
                                     setState(() {
-                                      value =
-                                          value - (percentage / 100 * value);
+                                      _value =
+                                          _value - (percentage / 100 * _value);
                                     });
                                     Fluttertoast.showToast(
                                         msg: 'Coupon Code Applied !');

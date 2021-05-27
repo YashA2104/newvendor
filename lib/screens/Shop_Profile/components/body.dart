@@ -15,13 +15,22 @@ import 'profile_menu.dart';
 import 'profile_pic.dart';
 
 class Body extends StatefulWidget {
+  String uid, shopName, shopAddress, shopType, catImageURL, shopImageURL;
+  Body({
+    @required this.shopAddress,
+    @required this.shopName,
+    @required this.shopType,
+    @required this.uid,
+    @required this.shopImageURL,
+    @required this.catImageURL,
+});
   @override
   _BodyState createState() => _BodyState();
 }
 
+
 class _BodyState extends State<Body> {
   String shopStatus;
-
   getDoc()async{
     DocumentSnapshot doc = await FirebaseFirestore.instance.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).get();
     shopStatus = doc['shopStatus'];
@@ -31,15 +40,20 @@ class _BodyState extends State<Body> {
   deleteShop() async{
     FirebaseFirestore fs = await FirebaseFirestore.instance;
     await FirebaseAuth.instance.currentUser.delete();
-    await fs.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).delete().whenComplete(() => {
+    await fs.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).delete();
+    await fs.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid).delete().whenComplete(() => {
       Fluttertoast.showToast(msg: 'Shop has been removed!!'),
     });
   }
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDoc();
+  }
+  @override
   Widget build(BuildContext context) {
-    setState(() {
-      getDoc();
-    });
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(
@@ -47,26 +61,18 @@ class _BodyState extends State<Body> {
           ProfilePic(),
           SizedBox(height: 20),
           ProfileMenu(
-            text: shopStatus=='Verified'? "Shop Status - 'LIVE' " :  "Shop Status - 'NOT LIVE' ",
+            text: 'Shop Status',
             icon: "assets/icons/Shop Icon.svg",
             press: () async  {
-              await getDoc();
-              Navigator.pushNamed(context, ShopStatus.routeName);
+              var doc = await FirebaseFirestore.instance.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).get();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ShopStatus(shopStatus: doc['shopStatus'])));
             },
           ),
           ProfileMenu(
             text: "My Shop",
             icon: "assets/icons/User Icon.svg",
             press: () async{
-              FirebaseFirestore fs  = await FirebaseFirestore.instance;
-              String id = FirebaseAuth.instance.currentUser.uid.toString();
-              DocumentSnapshot doc = await fs.collection('vendor').doc(id).collection('shop').doc('details').get();
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> MyShop(
-                uid: FirebaseAuth.instance.currentUser.uid,
-                shopName: doc['shopName'],
-                shopAddress: doc['shopAddress'],
-                shopType: doc['shopType'],
-              )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyShop(shopAddress: widget.shopAddress, shopName: widget.shopName, shopType: widget.shopType, uid: widget.uid, shopImageURL: widget.shopImageURL, catImageURL: widget.catImageURL)));
             },
           ),
           ProfileMenu(
