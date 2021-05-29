@@ -5,6 +5,12 @@ import 'package:vendor/screens/MessagingInterior/chat_interior.dart';
 import 'package:vendor/size_config.dart';
 
 class CustomerProfile extends StatelessWidget {
+  String name,phone,address;
+  CustomerProfile({
+    @required this.name,
+    @required this.phone,
+    @required this.address,
+});
   static String routeName = '/CustomerProfile';
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,7 @@ class CustomerProfile extends StatelessWidget {
           ),
         ],
       ),
-      body: Body(),
+      body: Body(address: address,phone: phone,name: name,),
     );
   }
 }

@@ -43,6 +43,25 @@ class _FormPageState extends State<FormPage> {
 
   uploadDetails() async {
     FirebaseFirestore firebaseFirestore = await FirebaseFirestore.instance;
+    firebaseFirestore.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).set({
+      'email': email,
+      'password': pass,
+      'firstName': '',
+      'lastName': '',
+      'phoneNumber': '',
+      'address': '',
+      'shopImage': 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'shopType' : '',
+      'catImage': '',
+      'userEmail': FirebaseAuth.instance.currentUser.email.toString(),
+      'userID': FirebaseAuth.instance.currentUser.uid,
+      'catImage' : 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'deliveryTiming': '2',
+      'Act Certificate' : 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'GST Certificate' : 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'PAN Card' : 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'Aadhar Card': 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg'
+    });
     firebaseFirestore
         .collection('vendor')
         .doc(FirebaseAuth.instance.currentUser.uid.toString())
@@ -55,12 +74,13 @@ class _FormPageState extends State<FormPage> {
       'lastName': '',
       'phoneNumber': '',
       'address': '',
-      'shopImage': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
+      'shopImage': 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
       'shopType' : '',
       'catImage': '',
       'userEmail': FirebaseAuth.instance.currentUser.email.toString(),
       'userID': FirebaseAuth.instance.currentUser.uid,
-      'catImage' : 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fimage-not-available-855398481144319%2Fphotos%2F&psig=AOvVaw3lT2eaW9zic_3Mi0lRT5_z&ust=1622109220701000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCRpOeJ5_ACFQAAAAAdAAAAABAD',
+      'catImage' : 'https://kubalubra.is/wp-content/uploads/2017/11/default-thumbnail.jpg',
+      'deliveryTiming': '2',
     }).whenComplete(() => {
               Fluttertoast.showToast(msg: 'Details are saved Successfully!'),
             });

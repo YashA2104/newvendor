@@ -54,7 +54,12 @@ class _catImageState extends State<catImage> {
       firebaseFirestore.collection('vendor').doc(FirebaseAuth.instance.currentUser.uid)
           .collection('user').doc('details').update({
       'catImage' : shopImageURL,
+
       }),
+        firebaseFirestore.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).update(
+            {
+              'catImage' : shopImageURL,
+            }),
 
       });
     });

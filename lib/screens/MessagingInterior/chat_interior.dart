@@ -6,6 +6,13 @@ import 'package:vendor/screens/MessagingChat/chat.dart';
 import 'components/chat_interior_body.dart';
 
 class ChatInterior extends StatelessWidget {
+  String name,id,phone,address;
+  ChatInterior({
+    @required this.name,
+    @required this.id,
+    @required this.address,
+    @required this.phone,
+  });
   static String routeName = '/ChatInterior';
   @override
   Widget build(BuildContext context) {
@@ -33,10 +40,10 @@ class ChatInterior extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, CustomerProfile.routeName);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CustomerProfile(name: name, phone: phone, address: address)));
                   },
                   child: Text(
-                    'Budwar Shops',
+                    name,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -64,7 +71,7 @@ class ChatInterior extends StatelessWidget {
           )
         ],
       ),
-      body: ChatInteriorBody(),
+      body: ChatInteriorBody(id: id,name: name,phone: phone,address: address,),
     );
   }
 }

@@ -37,12 +37,19 @@ class _DocsBodyState extends State<DocsBody> {
       }
     });
   }
+  Future chooseCameraImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      }
+    });
+  }
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   uploadDocs(String docType) async {
-    await chooseImage();
     var storage = FirebaseStorage.instance
         .ref('Docs')
         .child(faker.person.name().toString());
@@ -68,7 +75,6 @@ class _DocsBodyState extends State<DocsBody> {
   }
 
   uploadImages(String doc) async{
-    await chooseImage();
     var storage = FirebaseStorage.instance
         .ref('Docs')
         .child(faker.person.name().toString());
@@ -152,13 +158,16 @@ class _DocsBodyState extends State<DocsBody> {
                         children: [
                           Button(
                             icon: Icons.camera_alt_outlined,
-                            handler: () {},
+                            handler: () {
+                              chooseCameraImage();
+                              uploadDocs('GST Certificate');
+                            },
                           ),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
-
+                                chooseImage();
                                 uploadDocs('GST Certificate');
                               }),
                         ],
@@ -204,12 +213,15 @@ class _DocsBodyState extends State<DocsBody> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Button(
-                              icon: Icons.camera_alt_outlined, handler: () {}),
+                              icon: Icons.camera_alt_outlined, handler: () {
+                                chooseCameraImage();
+                                uploadDocs('Act Certificate');
+                          }),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
-
+                                chooseImage();
                                 uploadDocs('Act Certificate');
                               }),
                         ],
@@ -255,11 +267,15 @@ class _DocsBodyState extends State<DocsBody> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Button(
-                              icon: Icons.camera_alt_outlined, handler: () {}),
+                              icon: Icons.camera_alt_outlined, handler: () {
+                                chooseCameraImage();
+                                uploadDocs('PAN Card');
+                          }),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
+                                chooseImage();
                                 uploadDocs('PAN Card');
                               }),
                         ],
@@ -305,11 +321,16 @@ class _DocsBodyState extends State<DocsBody> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Button(
-                              icon: Icons.camera_alt_outlined, handler: () {}),
+                              icon: Icons.camera_alt_outlined, handler: () {
+                              chooseCameraImage();
+                              uploadDocs('Aadhar Card');
+
+                          }),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
+                                chooseImage();
                                 uploadDocs('Aadhar Card');
                               }),
                         ],
@@ -356,11 +377,17 @@ class _DocsBodyState extends State<DocsBody> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Button(
-                              icon: Icons.camera_alt_outlined, handler: () {}),
+                              icon: Icons.camera_alt_outlined, handler: () {
+                                chooseCameraImage();
+                            uploadshopImage();
+                            uploadImages('shopImage');
+
+                          }),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
+                                chooseImage();
                                 uploadshopImage();
                                 uploadImages('shopImage');
                               }),
@@ -407,11 +434,16 @@ class _DocsBodyState extends State<DocsBody> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Button(
-                              icon: Icons.camera_alt_outlined, handler: () {}),
+                              icon: Icons.camera_alt_outlined, handler: () {
+                                chooseCameraImage();
+                                uploadDocs('catImage');
+                                uploadcatImage();
+                          }),
                           SizedBox(width: getProportionateScreenWidth(30)),
                           Button(
                               icon: Icons.file_upload,
                               handler: () {
+                                chooseImage();
                                 uploadcatImage();
                                 uploadImages('catImage');
                               }),

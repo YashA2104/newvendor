@@ -55,6 +55,11 @@ class _ShopImageState extends State<ShopImage> {
           'shopImage' : shopImageURL,
         }),
 
+        firebaseFirestore.collection('shop').doc(FirebaseAuth.instance.currentUser.uid).update(
+            {
+              'shopImage' : shopImageURL,
+            }),
+
 
       });
     });

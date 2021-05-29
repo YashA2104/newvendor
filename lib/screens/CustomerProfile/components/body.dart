@@ -6,6 +6,13 @@ import 'package:vendor/screens/CustomerProfile/components/profilepic.dart';
 import 'package:vendor/size_config.dart';
 
 class Body extends StatelessWidget {
+  String name,phone,address;
+  Body({
+    @required this.phone,
+    @required this.address,
+    @required this.name,
+    print(name, phone , address),
+});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,7 +23,7 @@ class Body extends StatelessWidget {
           height: getProportionateScreenWidth(15),
         ),
         Text(
-          'Customer Name',
+          name,
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
         ),
@@ -24,11 +31,11 @@ class Body extends StatelessWidget {
           height: getProportionateScreenWidth(5),
         ),
         CustomerDetails(
-            text: 'Contact Number', icon: "assets/icons/User Icon.svg"),
+            text: phone, icon: "assets/icons/User Icon.svg"),
         SizedBox(
           height: getProportionateScreenWidth(5),
         ),
-        CustomerDetails(text: 'Address', icon: "assets/icons/User Icon.svg"),
+        CustomerDetails(text: address, icon: "assets/icons/User Icon.svg"),
         SizedBox(
           height: getProportionateScreenWidth(5),
         ),

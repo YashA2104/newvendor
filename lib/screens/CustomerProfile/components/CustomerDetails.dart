@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vendor/constants.dart';
 
 class CustomerDetails extends StatelessWidget {
-  const CustomerDetails({
+  String text,icon;
+  CustomerDetails({
     Key key,
     @required this.text,
     @required this.icon,
     this.press,
   }) : super(key: key);
 
-  final String text, icon;
   final VoidCallback press;
 
   @override
