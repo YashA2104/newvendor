@@ -1,5 +1,5 @@
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show AppBar, BuildContext, Colors, FontWeight, Icon, IconButton, Icons, Navigator, Scaffold, StatelessWidget, Text, TextStyle, Widget, required;
 import 'package:vendor/screens/CustomerProfile/components/body.dart';
 import 'package:vendor/screens/MessagingInterior/chat_interior.dart';
 import 'package:vendor/size_config.dart';
